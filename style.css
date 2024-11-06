@@ -1,0 +1,40 @@
+:root {
+    --cor-principal: #E6E5E7;
+    --cor-segundaria: #E9E3F1;
+    --cor-destaque: #B6B6D5;
+    --cor-cinza: #757179;
+    --cor-preto: #0E0F23;
+  }
+
+
+
+body{
+    background-color: whitesmoke;
+    font-family: JetBrainsMono;
+}
+
+.container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-color: gainsboro;
+    border-radius: 5px;
+
+}
+
+
+.item{
+    background-color: gainsboro;
+
+}
+
+.categoria{
+    background-color: azure;
+
+}
+
+.img{
+    max-width: 10%;
+    max-height: 10%;
+}
