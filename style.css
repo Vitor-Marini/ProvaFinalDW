@@ -16,13 +16,18 @@
 
 }
 
-body {
-    font-family: 'JetBrains Mono', monospace;
-    line-height: 1.6;
-    background-color: whitesmoke;
-    min-height: 100vh;
-}
 
+
+
+body-form {
+    font-family: 'JetBrains Mono', monospace;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: whitesmoke;
+}
 
 main {
     padding: 5rem;
@@ -38,11 +43,6 @@ footer {
     position: relative;
     width: 100%;
 }
-
-body {
-    min-height: 100vh;
-    margin: 0;
-  }
 
 
 footer {
@@ -118,7 +118,6 @@ header nav ul {
 }
 
 
-
 .containerInput {
     background-color: gainsboro;
     padding: 2rem;
@@ -127,6 +126,14 @@ header nav ul {
     width: 20rem;
 }
 
+
+.containerInput2 {
+    background-color: gainsboro;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 40%; 
+}
 
 
 .form2{
@@ -146,16 +153,7 @@ label {
     color: var(--cor-cinza);
 }
 
-.containerInput2 {
-    display: flex;
-    flex-direction: column;
-    background-color: gainsboro;
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 60%; /* Aumente a largura se necessário */
-    margin: 0 auto;
-}
+
 
 
 .left-col, .right-col {
