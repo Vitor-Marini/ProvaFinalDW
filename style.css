@@ -6,25 +6,7 @@
     --cor-preto: #0E0F23;
   }
 
-
-
-body{
-    background-color: whitesmoke;
-    font-family: JetBrainsMono;
-}
-
-.container{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    background-color: gainsboro;
-    border-radius: 5px;
-
-}
-
-
-.item{
+  .item{
     background-color: gainsboro;
 
 }
@@ -34,7 +16,173 @@ body{
 
 }
 
-.img{
-    max-width: 10%;
-    max-height: 10%;
+body {
+    font-family: 'JetBrains Mono', monospace;
+    line-height: 1.6;
+    background-color: whitesmoke;
+    min-height: 100vh;
 }
+
+
+main {
+    padding: 5rem;
+  }
+
+
+header,
+footer {
+    background-color: var(--cor-principal);
+    color: var(--cor-destaque);
+    padding: 1rem;
+    text-align: center;
+    position: relative;
+    width: 100%;
+}
+
+body {
+    min-height: 100vh;
+    margin: 0;
+  }
+
+
+footer {
+    bottom: 0;
+    position: fixed;
+    margin-bottom: 0px;
+    max-height: 120px;
+  }
+
+header nav ul {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+  }
+  
+  header nav li {
+    margin-right: 1rem;
+  }
+  
+  header nav a {
+    color: var(--cor-cinza);
+    text-decoration: none;
+  }
+
+.logo-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+}
+
+.logo {
+    height: 100%; 
+    width: auto;
+}
+
+.small-logo {
+    width: 50%;
+    height: auto;
+}
+
+.small-logo2 {
+    width: 100px;
+    aspect-ratio: 1/1;
+}
+
+.titlelInputC {
+    display: grid;
+    grid-template-columns: auto 4fr;
+    align-items: center;
+}
+
+.titlelInputC2 {
+    display: grid;
+    grid-template-columns: auto 4fr;
+    align-items: center;
+}
+
+.titlelInputC h1 {
+    float: left;
+    padding-right: 50%; 
+}
+
+.titlelInputC img {
+    float: right;
+    margin-left: 50%; 
+}
+
+.titlelInputC2 img {
+    float: right;
+    margin-left: 80%; 
+}
+
+
+
+.containerInput {
+    background-color: gainsboro;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    width: 20rem;
+}
+
+
+
+.form2{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    margin-bottom: 0.5rem;
+    color: var(--cor-cinza);
+}
+
+.containerInput2 {
+    display: flex;
+    flex-direction: column;
+    background-color: gainsboro;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 60%; /* Aumente a largura se necessário */
+    margin: 0 auto;
+}
+
+
+.left-col, .right-col {
+    display: flex;
+    flex-direction: column;
+    width: 48%; /* Ajusta as colunas para ficarem lado a lado */
+}
+
+h1,h2, h3 {
+    color: var(--cor-destaque);
+}
+
+
+input, select {
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 100%; /* Faz com que os inputs ocupem toda a largura */
+}
+
+button {
+    background-color: var(--cor-destaque);
+    color: var(--cor-cinza);
+    padding: 0.75rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
