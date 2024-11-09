@@ -27,6 +27,10 @@
 
       <main>
 
+        <h1>Welcome to the Dashboard</h1>
+        <p id="welcomeMessage"></p>
+        <button id="logoutButton">Logout</button>
+
         <h1>CARDAPIO CRIAR CATEGORIA  UMA DO LADO O OUTRO PA TA LIGADO DAI DENTRO DA CATEGORIA CONTAIENR PADRAO .ITEM</h1>
 
       </main>
@@ -43,5 +47,32 @@
             </div>
         </div>
       </footer>
+
+
+      <script>
+        function getCookie(name) {
+            let cookieArr = document.cookie.split(";");
+            for (let i = 0; i < cookieArr.length; i++) {
+                let cookie = cookieArr[i].trim();
+                if (cookie.startsWith(name + "=")) {
+                    return cookie.substring(name.length + 1);
+                }
+            }
+            return null;
+        }
+        
+        const username = decodeURIComponent(getCookie('username'));
+
+        if (!username) {
+            window.location.href = 'login.html';
+        } else {
+            document.getElementById('welcomeMessage').textContent = `Welcome, ${username}!`;
+        }
+
+        document.getElementById('logoutButton').addEventListener('click', function() {
+            document.cookie = 'username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/';
+            window.location.href = 'login.html';
+        });
+    </script>
 </body>
 </html>
