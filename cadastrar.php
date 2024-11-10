@@ -19,28 +19,46 @@ $estado = $_POST["estado"];
 $senhaHash = password_hash($senha, PASSWORD_BCRYPT);
 
 
-$sql = "INSERT INTO tb_usuario (nome, email, data_nascimento, telefone, senha, cep, rua, numero, bairro, complemento, cidade, estado) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
+ $sql = "SELECT id FROM tb_usuario WHERE email = ?";
 
+ $stmt = $conn->prepare($sql);
+ $stmt->bind_param("s", $email);
+ $stmt->execute();
+ $stmt->store_result();
 
-$cmd = $conn->prepare($sql);
+ if ($stmt->num_rows > 0) {
+     $errorMessage = urlencode("Email ja cadastrado");
+     header("Location: cadastrar.html?error=$errorMessage");
+ } else {
+    $stmt->close();
 
-if (!$cmd) {
+    $sql = "INSERT INTO tb_usuario (nome, email, data_nascimento, telefone, senha, cep, rua, numero, bairro, complemento, cidade, estado) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+    $cmd = $conn->prepare($sql);
+
+    if (!$cmd) {
     echo "ERRO ao preparar SQL: " . $conn->error;
     exit;
-}
+    }
 
 
-$cmd->bind_param("ssssssssssss", $nome, $email, $dataNascimento, $telefone, $senhaHash, $cep, $rua, $numero, $bairro, $complemento, $cidade, $estado);
+    $cmd->bind_param("ssssssssssss", $nome, $email, $dataNascimento, $telefone, $senhaHash, $cep, $rua, $numero, $bairro, $complemento, $cidade, $estado);
 
-if ($cmd->execute()) {
+    if ($cmd->execute()) {
         $conn->close();
         header("Location: login.html");
         exit;  
-} else {
+    } else {
     echo "ERRO ao executar consulta: " . $cmd->error;
-}
+    }
+    }
+
+
+
+
+
 
 $conn->close();
 ?>

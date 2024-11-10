@@ -184,6 +184,7 @@
             
             <button type="submit" id="btnCadastro" disabled >Cadastrar</button>
         </form>
+        <p id="error" style="color: red; display: flex; justify-content: center;"></p>
     </div>
 
     <script>
@@ -202,6 +203,16 @@
             btnCadastro.disabled = false;
         }
     });
+
+        function getUrlParameter(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        const errorMessage = getUrlParameter('error');
+        if (errorMessage) {
+            document.getElementById('error').textContent = decodeURIComponent(errorMessage);
+        }
     </script>
 </body>
 </html>
