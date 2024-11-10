@@ -18,7 +18,8 @@ if (!$stmt) {
 
 $stmt->bind_param("s", $email);
 $stmt->execute();
-$stmt->store_result();    // Verifica se algum usuário foi encontrado
+$stmt->store_result(); 
+
 if ($stmt->num_rows > 0) {
     $stmt->bind_result($id, $nome, $senhaHash);
     $stmt->fetch();

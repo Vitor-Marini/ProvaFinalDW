@@ -23,18 +23,111 @@
             <img src="img/logo.png" class="small-logo">
         </div>
         <h2>Recuperar Senha:</h2>
-        <form action="login.php">
+
+        <div id="formEmail">
+        <form action="recuperarsenha.php" method="post">
             <label for="email">Email:</label>
-            <input type="email" id="email" required placeholder="exemplo@email.com">
+            <input type="email" id="email" name="email" required placeholder="exemplo@email.com">
             
-            <label for="senha">Senha:</label>
-            <input type="password" id="senha" required>
+            <button type="submit">Enviar</button>
          </form> 
+         <p id="error" style="color: red;"></p>
+        </div>
+
+         <div id="formCodigo" style="display: none;">
+         <form action="recuperarsenha.php" method="post">
+
+            <span id="emailUsuario" style="color: #0E0F23;; font-size: 1rem; display: flex; justify-content: center;"></span>
+
+            <input type="hidden" name="email" id="emailHidden">
+
+            <label for="senha">Nova Senha:</label>
+            <input type="password" id="senha" name="senha" required>
+
+            <label for="senhaCon">Confirmar Nova Senha:</label>
+            <input type="password" id="senhaCon" name="senhaCon" required>
+            <span id="senhaConFeedback" style="color: red; display: none; font-size: 0.9rem;">As senhas não coincidem</span>
+            
+            <label for="codigo">Digite Agua:</label>
+            <input type="text" id="codigoI" name="codigo" required>
+            <span id="codigoFeedback" style="color: red; display: none; font-size: 0.9rem;">Codigo Incorreto</span>
+
+            <button type="submit" id="btnTrocar">Trocar Senha</button>
+         </form> 
+         <p id="error" style="color: red;"></p>
+        </div>
     </div>
             
         
         
     
+<script>
+    
+    
 
+    
+    function getUrlParameter(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        const errorMessage = getUrlParameter('error');
+        if (errorMessage) {
+            document.getElementById('error').textContent = decodeURIComponent(errorMessage);
+        }
+
+        const successMessage = getUrlParameter('success');
+        if(successMessage){
+            document.getElementById('formEmail').style.display = 'none';
+            document.getElementById('formCodigo').style.display = 'block'
+        }
+
+        const emailUsuario = getUrlParameter('email');
+        if(emailUsuario){
+           document.getElementById('emailUsuario').textContent=emailUsuario;
+           document.getElementById('emailHidden').value = emailUsuario;
+        }
+    
+
+    
+
+    
+    document.getElementById('senhaCon').addEventListener('input', function () {
+    const senha = document.getElementById('senha').value;
+    const senhaCon = this.value;
+    const feedback = document.getElementById('senhaConFeedback');
+    const btnCadastro = document.getElementById('btnTrocar');
+    
+    if (senha !== senhaCon) {
+        this.style.borderColor = 'red'; 
+        feedback.style.display = 'block';
+    }else{
+        this.style.borderColor = ''; 
+        feedback.style.display = 'none'; 
+        btnCadastro.disabled = false;
+    }
+    });
+
+    document.getElementById('codigoI').addEventListener('input',function(){
+        const codigo = 'Agua';
+        const codigoI = this.value;
+        const btnCadastro = document.getElementById('btnTrocar');
+        const feedbackCodigo = document.getElementById('codigoFeedback')
+        
+        
+        if(codigoI !== codigo){
+            this.style.borderColor = 'red';
+            feedbackCodigo.style.display = 'block';
+           
+        }else{
+            this.style.borderColor = '';
+            feedbackCodigo.style.display = 'none';
+            btnCadastro.disabled = false;
+        }
+    });
+
+    
+
+</script>
 </body>
 </html>

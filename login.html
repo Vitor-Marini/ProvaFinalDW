@@ -23,7 +23,11 @@
             <h1>Agua's</h1>
             <img src="img/logo.png" class="small-logo">
         </div>
+
+        <p id="novaSenhaSuccess" style="color: rgb(109, 141, 228);display: flex; justify-content: center;"></p>
+        
         <h2>Login:</h2>
+
         <form action="login.php" method="post">
             <label for="email">Email:</label>
             <input type="email" id="email" name="email" required placeholder="exemplo@email.com">
@@ -52,6 +56,12 @@
         const errorMessage = getUrlParameter('error');
         if (errorMessage) {
             document.getElementById('error').textContent = decodeURIComponent(errorMessage);
+        }
+
+        const successMessage = getUrlParameter('success');
+        if(successMessage){
+            document.getElementById('novaSenhaSuccess').textContent = decodeURIComponent(successMessage);
+           
         }
     </script>
 </body>
