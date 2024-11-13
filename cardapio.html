@@ -40,7 +40,6 @@ body {
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     padding: 15px;
-    width: 100%;
     max-width: 450px;
     flex: 1 1 30%;
     background-color: var(--cor-principal);
@@ -71,8 +70,9 @@ body {
 }
 
 .item img {
-    width: 300px; /* Ajuste conforme necessário */
-  height: 200px; /* Ajuste conforme necessário */
+  width: 300px; 
+  height: 200px; 
+  border-radius: 35px;
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
@@ -81,7 +81,7 @@ body {
 .item-info {
     padding: 10px;
     text-align: center;
-    color: var(--cor-cinza);
+    color: blue;
 }
 
 .item-info strong {
@@ -105,8 +105,72 @@ button {
 button:hover {
     background-color: #005bb5;
 }
+.modal {
+    display: none; 
+    position: fixed;
+    z-index: 1000; 
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.8); 
+}
 
+.modal-content {
+    background-color: var(--cor-segundaria);
+    margin: 5% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 600px;
+    max-height: 500px;
+    text-align: center;
+    color: #333;
+}
 
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modal-info img{
+  width: 300px; 
+  height: 200px; 
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.preco{
+    color:blue;
+}
+#logoutButton {
+    position: absolute;
+    top: 13%;
+    right: 1rem;
+    transform: translateY(-50%);
+}
+
+#userNome{
+    position: absolute;
+    top: 8%;
+    right: 1rem;
+    transform: translateY(-50%); 
+}
+
+.id{
+    display: block;
+}
     </style>
 </head>
 <body>
@@ -121,24 +185,22 @@ button:hover {
         <div class="logo-container">
             <img src="img/logo.png" class="logo" alt="Logo" style="height: 150px;">
         </div>
+        <p id="userNome"></p>
+        <button id="logoutButton">Logout</button>
     </header>
     <main>
         <div id="menu" class="containerOUT"></div>
     
-        <!-- Modal para detalhes do item -->
-        <div id="itemModal" class="modal" style="display: none;">
+        <div id="modalDetalhes" class="modal">
             <div class="modal-content">
-                <span class="close-btn">&times;</span>
-                <img id="modalImg" src="" alt="Imagem do Item" style="width: 100%; max-height: 400px; object-fit: contain;">
-                <h2 id="modalNome"></h2>
-                <p id="modalDescricao"></p>
-                <p id="modalPreco"></p>
+                <span class="close">&times;</span>
+                <div id="modal-info"></div>
                 <div>
-                    <button id="decrementBtn">-</button>
+                    <button id="decrease" onclick="alterarQuantidade(-1)">-</button>
                     <span id="quantidade">1</span>
-                    <button id="incrementBtn">+</button>
-                    <button id="adicionarPedidoBtn">Adicionar ao Pedido</button>
+                    <button id="increase" onclick="alterarQuantidade(1)">+</button>
                 </div>
+                <button onclick="adicionarAoPedido()">Adicionar ao pedido</button>
             </div>
         </div>
     </main>
@@ -151,15 +213,15 @@ button:hover {
     </footer>
 
     <script>
+        
+
         document.addEventListener('DOMContentLoaded', function() {
             var xhr = new XMLHttpRequest();
             xhr.open('GET', 'cardapio.php', true);
-
             xhr.onreadystatechange = function() {
                 if (xhr.readyState === 4 && xhr.status === 200) {
                     try {
                         var data = JSON.parse(this.responseText);
-                        console.log(data);
                         renderizarMenu(data);
                     } catch (e) {
                         console.error('Erro ao processar o JSON:', e);
@@ -168,41 +230,164 @@ button:hover {
                     console.error('Erro na requisição:', xhr.status);
                 }
             };
-
             xhr.send();
         });
+    
+    function renderizarMenu(data) {
+    var container = document.getElementById('menu');
+    data.forEach(function(categoria) {
+       
 
-        function renderizarMenu(data) {
-            var container = document.getElementById('menu');
-            data.forEach(function(categoria) {
-                var divCategoria = document.createElement('div');
-                divCategoria.classList.add('categoria');
+        var divCategoria = document.createElement('div');
+        divCategoria.classList.add('categoria');
 
-                var titulo = document.createElement('h2');
-                titulo.textContent = categoria.categoria;
-                divCategoria.appendChild(titulo);
+        var titulo = document.createElement('h2');
+        titulo.textContent = categoria.categoria;
+        divCategoria.appendChild(titulo);
 
-                categoria.itens.forEach(function(item) {
-                    var divItem = document.createElement('div');
-                    divItem.classList.add('item');
+        categoria.itens.forEach(function(item) {
+            var divItem = document.createElement('div');
+            divItem.classList.add('id');
 
-                    var img = document.createElement('img');
-                    img.src = item.foto ? item.foto : 'imgItens/defaultImg.png';
-                    img.alt = item.nome;
+            var divItem = document.createElement('div');
+            divItem.classList.add('item');
 
-                    var info = document.createElement('div');
-                    info.classList.add('item-info');
-                    info.innerHTML = `<strong>${item.nome}</strong><br>Preço: R$${item.preco}`;
+            var img = document.createElement('img');
+            img.src = item.foto ? item.foto : 'imgItens/defaultImg.png';
+            img.alt = item.nome;
 
-                    divItem.appendChild(img);
-                    divItem.appendChild(info);
+            var info = document.createElement('div');
+            info.classList.add('item-info');
+            info.innerHTML = `<strong>${item.nome}</strong><br>Preço: R$${item.preco}`;
 
-                    divCategoria.appendChild(divItem);
-                });
+            var btnDetalhes = document.createElement('button');
+            btnDetalhes.textContent = 'Ver detalhes';
+            btnDetalhes.onclick = function() {
+                mostrarModal(item);
+            };
 
-                container.appendChild(divCategoria);
-            });
+            divItem.appendChild(img);
+            divItem.appendChild(info);
+            divItem.appendChild(btnDetalhes);
+            divCategoria.appendChild(divItem);
+        });
+
+        container.appendChild(divCategoria);
+    });
+}
+
+function mostrarModal(item) {
+    var modal = document.getElementById('modalDetalhes');
+    var modalInfo = document.getElementById('modal-info');
+    modalInfo.innerHTML = `
+        <img src="${item.foto ? item.foto : 'imgItens/defaultImg.png'}" alt="${item.nome}" style="
+        width: 300px; 
+        height: 200px; 
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;">
+        <h2 class="nome">${item.nome}</h2>
+        <h3 class="preco">Preço:R$${item.preco}</h3>
+        <p class="id">${item.id}</p>
+        <p>Descrição: ${item.descricao}</p>
+        
+    `;
+    modal.style.display = 'block';
+    document.getElementById('quantidade').textContent = 1;
+}
+
+
+document.querySelector('.close').onclick = function() {
+    document.getElementById('modalDetalhes').style.display = 'none';
+};
+
+
+function alterarQuantidade(valor) {
+    var quantidadeElem = document.getElementById('quantidade');
+    var quantidade = parseInt(quantidadeElem.textContent);
+    quantidade = Math.max(1, quantidade + valor);
+    quantidadeElem.textContent = quantidade;
+}
+
+function adicionarAoPedido() {
+    var quantidade = parseInt(document.getElementById('quantidade').textContent);
+    var preco = parseFloat(document.querySelector('.preco').textContent.replace(/[^0-9,.-]/g, '').replace(',', '.'));
+    var itemID = parseInt(document.querySelector('.id').textContent);
+    const userInfo = getCookie('userInfo');
+    var userID = userInfo.id;
+
+    console.log(itemID);
+    console.log(quantidade);
+    console.log(preco);
+    console.log(userID);
+
+    var xhr = new XMLHttpRequest();
+xhr.open('POST', 'pedido.php', true);
+xhr.setRequestHeader('Content-Type', 'application/json');
+
+var data = JSON.stringify([{
+    userID: userID,
+    itemID: itemID,
+    quantidade: quantidade,
+    preco: preco
+}]);
+
+xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4) { 
+        if (xhr.status === 200) {
+            console.log('Resposta do servidor:', xhr.responseText);
+            var response = JSON.parse(xhr.responseText);
+            if (response.success) {
+                alert('Item adicionado com sucesso!');
+            } else {
+                alert('Erro ao adicionar o item: ' + response.message);
+            }
+        } else {
+            console.error('Erro 500: Erro interno do servidor');
+            alert('Ocorreu um erro ao tentar processar o pedido.');
         }
+    }
+};
+xhr.send(data);
+}
+
+
+window.onclick = function(event) {
+    var modal = document.getElementById('modalDetalhes');
+    if (event.target == modal) {
+        modal.style.display = 'none';
+    }
+};
+
+
+function getCookie(name) {
+    let cookieArr = document.cookie.split(";");
+    for (let i = 0; i < cookieArr.length; i++) {
+        let cookie = cookieArr[i].trim();
+        if (cookie.startsWith(name + "=")) {
+            return JSON.parse(decodeURIComponent(cookie.substring(name.length + 1)));
+        }
+    }
+    return null;
+}
+    
+   
+    document.addEventListener('DOMContentLoaded', function() {
+    const userInfo = getCookie('userInfo');
+    
+    if (!userInfo) {
+        history.pushState({}, '', 'login.html');
+        location.reload();
+    } else {
+        const userNome = document.getElementById('userNome');
+        userNome.textContent = userInfo.nome;
+    }
+    });
+
+    document.getElementById('logoutButton').addEventListener('click', function() {
+        document.cookie = 'userInfo=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/';
+        window.location.href = 'login.html';
+    });
     </script>
 </body>
 </html>

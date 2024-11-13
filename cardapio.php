@@ -17,7 +17,8 @@ while ($categoria = $categorias->fetch_assoc()) {
             'nome' => $item['nome'],
             'descricao' => $item['descricao'],
             'foto' => $item['foto'], // Deve ser a URL da imagem se estiver em um diretório
-            'preco' => $item['preco']
+            'preco' => $item['preco'],
+            'id' => $item['id']
         ];
     }
 

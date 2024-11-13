@@ -30,7 +30,8 @@ if ($stmt->num_rows > 0) {
         $_SESSION["user_id"] = $id;
         $_SESSION["nome"] = $nome;
 
-        setcookie('username', $nome, time() + 3600, '/');
+        //setcookie('username', $nome, time() + 3600, '/');
+        setcookie('userInfo', json_encode(['nome' => $nome, 'id' => $id]), time() + 3600, '/');
 
         header("Location: cardapio.html");
         exit;
