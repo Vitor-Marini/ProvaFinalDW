@@ -1,75 +1,208 @@
-<html lang="pt-Br">
+<!DOCTYPE html>
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href='https://fonts.googleapis.com/css?family=JetBrains Mono' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css2?family=JetBrains+Mono&family=Roboto:wght@400;700&display=swap' rel='stylesheet'>
     <link rel="stylesheet" href="style.css">
-    <title>Cardapio</title>
+    <title>Cardápio</title>
+    <style>
 
+
+:root {
+    --cor-principal: #E6E5E7;
+    --cor-segundaria: #E9E3F1;
+    --cor-destaque: #B6B6D5;
+    --cor-cinza: #757179;
+    --cor-preto: #0E0F23;
+  }
+
+
+body {
+    font-family: 'JetBrains Mono', monospace;
+    margin: 0;
+    padding: 0;
+    background-color: whitesmoke;
+    color: var(--cor-preto);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.containerOUT {
+    display: flex;
+    justify-content: space-around;
+    gap: 20px;
+    padding: 20px;
+}
+
+.categoria {
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    width: 100%;
+    max-width: 450px;
+    flex: 1 1 30%;
+    background-color: var(--cor-principal);
+}
+
+.categoria h2 {
+    font-size: 1.25rem;
+    color: var(--cor-destaque);
+    margin-bottom: 15px;
+    border-bottom: 2px solid var(--cor-destaque);
+    padding-bottom: 5px;
+}
+
+.item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: box-shadow 0.3s;
+    padding: 10px;
+}
+
+.item:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.item img {
+    width: 300px; /* Ajuste conforme necessário */
+  height: 200px; /* Ajuste conforme necessário */
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.item-info {
+    padding: 10px;
+    text-align: center;
+    color: var(--cor-cinza);
+}
+
+.item-info strong {
+    font-size: 1.1rem;
+    display: block;
+    margin-bottom: 5px;
+    color: var(--cor-cinza);
+}
+
+button {
+    background-color: var(--cor-destaque);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 15px;
+    margin-top: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #005bb5;
+}
+
+
+    </style>
 </head>
 <body>
     <header>
-        <h1>Aguas's</h1>
+        <h1>Águas's</h1>
         <nav>
-          <ul>
-            <li><a href="cardapio.html" style="font-weight: bold; text-decoration: underline;">Cardapio</a></li>
-            <li><a href="resumo.html">Resumo</a></li>
-          </ul>
+            <ul>
+                <li><a href="cardapio.html"style="font-weight: bold; text-decoration: underline;">Cardápio</a></li>
+                <li><a href="resumo.html" >Resumo</a></li>
+            </ul>
         </nav>
         <div class="logo-container">
-            <img src="img/logo.png" class="logo">
+            <img src="img/logo.png" class="logo" alt="Logo" style="height: 150px;">
         </div>
-      </header>
-
-
-      <main>
-
-        <h1>Welcome to the Dashboard</h1>
-        <p id="welcomeMessage"></p>
-        <button id="logoutButton">Logout</button>
-
-        <h1>CARDAPIO CRIAR CATEGORIA  UMA DO LADO O OUTRO PA TA LIGADO DAI DENTRO DA CATEGORIA CONTAIENR PADRAO .ITEM</h1>
-
-      </main>
-
+    </header>
+    <main>
+        <div id="menu" class="containerOUT"></div>
     
-
-     <footer class="footer">
-           <div class="row">
-             <div class="col-md-4">
-              <h3>Desenvolvedor:</h3>
-              <p>Vitor Ferraz Marini</p>
-              <p>837771</p>
-             </div>
+        <!-- Modal para detalhes do item -->
+        <div id="itemModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <span class="close-btn">&times;</span>
+                <img id="modalImg" src="" alt="Imagem do Item" style="width: 100%; max-height: 400px; object-fit: contain;">
+                <h2 id="modalNome"></h2>
+                <p id="modalDescricao"></p>
+                <p id="modalPreco"></p>
+                <div>
+                    <button id="decrementBtn">-</button>
+                    <span id="quantidade">1</span>
+                    <button id="incrementBtn">+</button>
+                    <button id="adicionarPedidoBtn">Adicionar ao Pedido</button>
+                </div>
             </div>
         </div>
-      </footer>
+    </main>
+  
 
+    <footer>
+        <h3>Desenvolvedor:</h3>
+        <p>Vitor Ferraz Marini</p>
+        <p>837771</p>
+    </footer>
 
-      <script>
-        function getCookie(name) {
-            let cookieArr = document.cookie.split(";");
-            for (let i = 0; i < cookieArr.length; i++) {
-                let cookie = cookieArr[i].trim();
-                if (cookie.startsWith(name + "=")) {
-                    return cookie.substring(name.length + 1);
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', 'cardapio.php', true);
+
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    try {
+                        var data = JSON.parse(this.responseText);
+                        console.log(data);
+                        renderizarMenu(data);
+                    } catch (e) {
+                        console.error('Erro ao processar o JSON:', e);
+                    }
+                } else if (xhr.readyState === 4) {
+                    console.error('Erro na requisição:', xhr.status);
                 }
-            }
-            return null;
-        }
-        
-        const username = decodeURIComponent(getCookie('username'));
+            };
 
-        if (!username) {
-            window.location.href = 'login.html';
-        } else {
-            document.getElementById('welcomeMessage').textContent = `Welcome, ${username}!`;
-        }
-
-        document.getElementById('logoutButton').addEventListener('click', function() {
-            document.cookie = 'username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/';
-            window.location.href = 'login.html';
+            xhr.send();
         });
+
+        function renderizarMenu(data) {
+            var container = document.getElementById('menu');
+            data.forEach(function(categoria) {
+                var divCategoria = document.createElement('div');
+                divCategoria.classList.add('categoria');
+
+                var titulo = document.createElement('h2');
+                titulo.textContent = categoria.categoria;
+                divCategoria.appendChild(titulo);
+
+                categoria.itens.forEach(function(item) {
+                    var divItem = document.createElement('div');
+                    divItem.classList.add('item');
+
+                    var img = document.createElement('img');
+                    img.src = item.foto ? item.foto : 'imgItens/defaultImg.png';
+                    img.alt = item.nome;
+
+                    var info = document.createElement('div');
+                    info.classList.add('item-info');
+                    info.innerHTML = `<strong>${item.nome}</strong><br>Preço: R$${item.preco}`;
+
+                    divItem.appendChild(img);
+                    divItem.appendChild(info);
+
+                    divCategoria.appendChild(divItem);
+                });
+
+                container.appendChild(divCategoria);
+            });
+        }
     </script>
 </body>
 </html>
