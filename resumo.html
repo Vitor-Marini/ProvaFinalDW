@@ -1,47 +1,302 @@
-<html lang="pt-Br">
+<!DOCTYPE html>
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href='https://fonts.googleapis.com/css?family=JetBrains Mono' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css2?family=JetBrains+Mono&family=Roboto:wght@400;700&display=swap' rel='stylesheet'>
     <link rel="stylesheet" href="style.css">
-    <title>Resumo</title>
+    <title>Cardápio</title>
     <style>
 
-      
+
+body {
+    font-family: 'JetBrains Mono', monospace;
+    margin: 0;
+    padding: 0;
+    background-color: whitesmoke;
+    color: var(--cor-preto);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+
+button {
+    background-color: var(--cor-destaque);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 15px;
+    margin-top: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #005bb5;
+}
+
+.preco{
+    color:blue;
+}
+#logoutButton {
+    position: absolute;
+    top: 13%;
+    right: 1rem;
+    transform: translateY(-50%);
+}
+
+#userNome{
+    position: absolute;
+    top: 8%;
+    right: 1rem;
+    transform: translateY(-50%); 
+}
+footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
     </style>
 </head>
 <body>
     <header>
-        <h1>Aguas's</h1>
+        <h1>Águas's</h1>
         <nav>
-          <ul>
-            <li><a href="cardapio.html" >Cardapio</a></li>
-            <li><a href="resumo.html" style="font-weight: bold; text-decoration: underline;">Resumo</a></li>
-          </ul>
+            <ul>
+                <li><a href="cardapio.html">Cardápio</a></li>
+                <li><a href="resumo.html"style="font-weight: bold; text-decoration: underline;" >Resumo</a></li>
+            </ul>
         </nav>
         <div class="logo-container">
-            <img src="img/logo.png" class="logo">
+            <img src="img/logo.png" class="logo" alt="Logo" style="height: 150px;">
         </div>
-      </header>
+        <p id="userNome"></p>
+        <button id="logoutButton">Logout</button>
+    </header>
+    <main>
 
 
-      <main>
 
-        <h1>RESUMO BOTA O RESUMO</h1>
 
-      </main>
+    </main>
+  
+
+    <footer>
+        <h3>Desenvolvedor:</h3>
+        <p>Vitor Ferraz Marini</p>
+        <p>837771</p>
+    </footer>
+
+    <script>
+        
+      
+
+        function getCookie(name) {
+    let cookieArr = document.cookie.split(";");
+    for (let i = 0; i < cookieArr.length; i++) {
+        let cookie = cookieArr[i].trim();
+        if (cookie.startsWith(name + "=")) {
+            return JSON.parse(decodeURIComponent(cookie.substring(name.length + 1)));
+        }
+    }
+    return null;
+}
+    
+   
+    document.addEventListener('DOMContentLoaded', function() {
+    const userInfo = getCookie('userInfo');
+    
+    if (!userInfo) {
+        history.pushState({}, '', 'login.html');
+        location.reload();
+    } else {
+        const userNome = document.getElementById('userNome');
+        userNome.textContent = userInfo.nome;
+        carregarPedidos(userInfo.id)
+    }
+    });
+
+    document.getElementById('logoutButton').addEventListener('click', function() {
+        document.cookie = 'userInfo=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/';
+        window.location.href = 'login.html';
+    });
+
 
     
+    function carregarPedidos(userID) {
+    console.log('Função carregarPedidos chamada com userID:', userID); // Verificando se a função é chamada
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'buscarPedidos.php?userID=' + userID, true);
+    xhr.onreadystatechange = function() {
+        console.log('Estado da requisição:', xhr.readyState); // Verificando estado da requisição
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            try {
+                var data = JSON.parse(this.responseText);
+                renderizarPedidos(data);
+            } catch (e) {
+                console.error('Erro ao processar o JSON:', e);
+            }
+        } else if (xhr.readyState === 4) {
+            console.error('Erro na requisição:', xhr.status);
+        }
+    };
+    xhr.send();
+}
 
-     <footer class="footer">
-           <div class="row">
-             <div class="col-md-4">
-              <h3>Desenvolvedor:</h3>
-              <p>Vitor Ferraz Marini</p>
-              <p>837771</p>
-             </div>
-            </div>
-        </div>
-      </footer>
+function renderizarPedidos(pedidos) {
+    const pedidosContainer = document.querySelector('main');
+    pedidosContainer.innerHTML = ''; // Limpa o conteúdo atual
+
+    // Agrupar itens pelo nome, somando as quantidades
+    const pedidosAgrupados = {};
+    pedidos.forEach(pedido => {
+        if (pedidosAgrupados[pedido.nome]) {
+            pedidosAgrupados[pedido.nome].quantidade += pedido.quantidade;
+        } else {
+            pedidosAgrupados[pedido.nome] = { ...pedido };
+        }
+    });
+
+    let total = 0;
+    for (const nome in pedidosAgrupados) {
+        const pedido = pedidosAgrupados[nome];
+        const item = document.createElement('div');
+        item.classList.add('pedido-item');
+
+        const nomeSpan = document.createElement('span');
+        nomeSpan.textContent = pedido.nome;
+
+        const quantidadeSpan = document.createElement('span');
+        quantidadeSpan.textContent = 'Quantidade: ' + pedido.quantidade;
+
+        const precoSpan = document.createElement('span');
+        precoSpan.textContent = 'Preço: R$ ' + (pedido.preco * pedido.quantidade).toFixed(2);
+
+        const btnAumentar = document.createElement('button');
+        btnAumentar.textContent = '+';
+        btnAumentar.classList.add('btn-aumentar');
+        btnAumentar.addEventListener('click', () => alterarQuantidade(pedido.id, 1));
+
+        const btnDiminuir = document.createElement('button');
+        btnDiminuir.textContent = '-';
+        btnDiminuir.classList.add('btn-diminuir');
+        btnDiminuir.addEventListener('click', () => alterarQuantidade(pedido.id, -1));
+
+        const excluirButton = document.createElement('button');
+        excluirButton.textContent = 'Excluir';
+        excluirButton.addEventListener('click', function() {
+            excluirItem(pedido.id);
+        });
+
+        total += pedido.preco * pedido.quantidade;
+
+        item.appendChild(nomeSpan);
+        item.appendChild(quantidadeSpan);
+        item.appendChild(precoSpan);
+        item.appendChild(btnAumentar);
+        item.appendChild(btnDiminuir);
+        item.appendChild(excluirButton);
+
+        pedidosContainer.appendChild(item);
+    }
+
+    // Exibir o total
+    const totalDiv = document.createElement('div');
+    totalDiv.classList.add('total');
+    totalDiv.innerHTML = `<h2>Total: R$ ${total.toFixed(2)}</h2>`;
+
+    // Adicionar o botão de finalizar pedido
+    const finalizarButton = document.createElement('button');
+    finalizarButton.textContent = 'Finalizar Pedido';
+    finalizarButton.classList.add('btn-finalizar');
+    finalizarButton.addEventListener('click', finalizarPedido);
+
+    totalDiv.appendChild(finalizarButton);
+    pedidosContainer.appendChild(totalDiv);
+}
+
+function alterarQuantidade(idPedido, quantidade) {
+    const userID = getCookie('userInfo').id;
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', 'alterarQuantidade.php', true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            try {
+                var response = JSON.parse(this.responseText);
+                if (response.success) {
+                    carregarPedidos(userID);
+                } else {
+                    alert('Erro ao atualizar a quantidade');
+                }
+            } catch (e) {
+                console.error('Erro ao processar o JSON:', e);
+            }
+        }
+    };
+    xhr.send(`idPedido=${idPedido}&quantidade=${quantidade}&userID=${userID}`);
+}
+function excluirItem(itemID) {
+    const userID = getCookie('userInfo').id;
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', 'deletarItem.php', true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            try {
+                var response = JSON.parse(this.responseText);
+                console.log(this.responseText)
+                if (response.success) {
+                    alert('Item removido com sucesso');
+                    carregarPedidos(userID); 
+                } else {
+                    alert('Erro ao remover o item');
+                }
+            } catch (e) {
+                console.error('Erro ao processar o JSON:', e);
+            }
+        }
+    };
+    xhr.send('itemID=' + itemID + '&userID=' + userID);
+}
+
+function finalizarPedido() {
+    // Mostrar uma mensagem de confirmação antes de prosseguir
+    const confirmacao = confirm('Tem certeza de que deseja finalizar o pedido?');
+    
+    if (confirmacao) {
+        const userID = getCookie('userInfo').id;
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', 'finalizarPedido.php', true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                try {
+                    var response = JSON.parse(this.responseText);
+                    if (response.success) {
+                        alert('Pedido finalizado com sucesso!');
+                        carregarPedidos(userID); // Recarregar pedidos
+                    } else {
+                        alert('Erro ao finalizar o pedido');
+                    }
+                } catch (e) {
+                    console.error('Erro ao processar o JSON:', e);
+                }
+            }
+        };
+        xhr.send('userID=' + userID);
+    } else {
+        // Caso o usuário cancele a confirmação
+        alert('A finalização do pedido foi cancelada.');
+    }
+}
+
+
+    </script>
 </body>
 </html>

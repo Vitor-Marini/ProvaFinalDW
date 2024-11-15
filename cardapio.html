@@ -322,7 +322,7 @@ function adicionarAoPedido() {
     console.log(userID);
 
     var xhr = new XMLHttpRequest();
-xhr.open('POST', 'pedido.php', true);
+xhr.open('POST', 'adicionarItemPedido.php', true);
 xhr.setRequestHeader('Content-Type', 'application/json');
 
 var data = JSON.stringify([{
