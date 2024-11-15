@@ -1,7 +1,6 @@
 <?php
 include "conexao.php"; 
 
-
 $nome = $_POST["nome"];
 $email = $_POST["email"];
 $dataNascimento = $_POST["dataNascimento"];
@@ -17,7 +16,6 @@ $estado = $_POST["estado"];
 
 
 $senhaHash = password_hash($senha, PASSWORD_BCRYPT);
-
 
 
  $sql = "SELECT id FROM tb_usuario WHERE email = ?";
@@ -37,12 +35,6 @@ $senhaHash = password_hash($senha, PASSWORD_BCRYPT);
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     $cmd = $conn->prepare($sql);
-
-    if (!$cmd) {
-    echo "ERRO ao preparar SQL: " . $conn->error;
-    exit;
-    }
-
 
     $cmd->bind_param("ssssssssssss", $nome, $email, $dataNascimento, $telefone, $senhaHash, $cep, $rua, $numero, $bairro, $complemento, $cidade, $estado);
 

@@ -1,11 +1,8 @@
 <?php
 include 'conexao.php'; 
-header('Content-Type: application/json');
 
-// Obtém o ID do usuário via POST
 $userID = $_POST['userID']; 
 
-// Atualiza o status de todos os itens do pedido para finalizado
 $sql = "UPDATE tb_itens_pedido SET finalizado = TRUE WHERE idUsuario = ? AND finalizado = FALSE";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $userID);

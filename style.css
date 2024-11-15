@@ -17,7 +17,7 @@
     min-height: 100vh;
 }
 
-  .item{
+.item{
     background-color: gainsboro;
 
 }
@@ -46,7 +46,6 @@ main {
     padding: 5rem;
   }
 
-
   header,
   footer {
       background-color: var(--cor-principal);
@@ -55,7 +54,6 @@ main {
       text-align: center;
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   }
-
 
   footer {
     border-top: 1px solid #ddd;
@@ -106,8 +104,6 @@ header nav ul {
     align-items: center;
 }
 
-
-
 .titlelInputC h1 {
     float: left;
     padding-right: 50%; 
@@ -118,9 +114,6 @@ header nav ul {
     margin-left: 50%; 
 }
 
-
-
-
 .containerInput {
     background-color: gainsboro;
     padding: 2rem;
@@ -128,13 +121,6 @@ header nav ul {
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
     width: 20rem;
 }
-
-
-
-
-
-
-
 
 form {
     display: flex;
@@ -145,11 +131,6 @@ label {
     margin-bottom: 0.5rem;
     color: var(--cor-cinza);
 }
-
-
-
-
-
 
 h1,h2, h3 {
     color: var(--cor-destaque);
@@ -181,7 +162,6 @@ button {
     height: 100%;
     object-fit: contain;
   }
-
 
   button:hover {
     background-color: #005bb5;

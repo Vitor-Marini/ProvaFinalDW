@@ -154,6 +154,7 @@ button:hover {
 .preco{
     color:blue;
 }
+
 #logoutButton {
     position: absolute;
     top: 13%;
@@ -322,33 +323,29 @@ function adicionarAoPedido() {
     console.log(userID);
 
     var xhr = new XMLHttpRequest();
-xhr.open('POST', 'adicionarItemPedido.php', true);
-xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.open('POST', 'adicionarItemPedido.php', true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
-var data = JSON.stringify([{
-    userID: userID,
-    itemID: itemID,
-    quantidade: quantidade,
-    preco: preco
-}]);
 
-xhr.onreadystatechange = function() {
-    if (xhr.readyState === 4) { 
-        if (xhr.status === 200) {
-            console.log('Resposta do servidor:', xhr.responseText);
-            var response = JSON.parse(xhr.responseText);
-            if (response.success) {
-                alert('Item adicionado com sucesso!');
+    var data = `userID=${encodeURIComponent(userID)}&itemID=${encodeURIComponent(itemID)}&quantidade=${encodeURIComponent(quantidade)}&preco=${encodeURIComponent(preco)}`;
+
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4) { 
+            if (xhr.status === 200) {
+                console.log('Resposta do servidor:', xhr.responseText);
+                var response = JSON.parse(xhr.responseText);
+                if (response.success) {
+                    alert('Item adicionado com sucesso!');
+                } else {
+                    alert('Erro ao adicionar o item: ' + response.message);
+                }
             } else {
-                alert('Erro ao adicionar o item: ' + response.message);
+                console.error('Erro 500: Erro interno do servidor');
+                alert('Ocorreu um erro ao tentar processar o pedido.');
             }
-        } else {
-            console.error('Erro 500: Erro interno do servidor');
-            alert('Ocorreu um erro ao tentar processar o pedido.');
         }
-    }
-};
-xhr.send(data);
+    };
+    xhr.send(data);
 }
 
 

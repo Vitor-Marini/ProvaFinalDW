@@ -6,59 +6,140 @@
     <link href='https://fonts.googleapis.com/css2?family=JetBrains+Mono&family=Roboto:wght@400;700&display=swap' rel='stylesheet'>
     <link rel="stylesheet" href="style.css">
     <title>Cardápio</title>
-    <style>
+<style>
+    :root {
+        --cor-principal: #E6E5E7;
+        --cor-segundaria: #E9E3F1;
+        --cor-destaque: #B6B6D5;
+        --cor-cinza: #757179;
+        --cor-preto: #0E0F23;
+    }
 
+    body {
+        font-family: 'JetBrains Mono', monospace;
+        margin: 0;
+        padding: 0;
+        background-color: whitesmoke;
+        color: var(--cor-preto);
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
 
-body {
-    font-family: 'JetBrains Mono', monospace;
-    margin: 0;
-    padding: 0;
-    background-color: whitesmoke;
-    color: var(--cor-preto);
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-}
+    button {
+        background-color: var(--cor-destaque);
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 8px 15px;
+        margin-top: 10px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
 
+    #logoutButton {
+        position: absolute;
+        top: 13%;
+        right: 1rem;
+        transform: translateY(-50%);
+    }
 
-button {
-    background-color: var(--cor-destaque);
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 8px 15px;
-    margin-top: 10px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
+    #userNome {
+        position: absolute;
+        top: 8%;
+        right: 1rem;
+        transform: translateY(-50%);
+    }
 
-button:hover {
-    background-color: #005bb5;
-}
+    main {
+        flex-grow: 1;
+        padding: 20px;
+    }
 
-.preco{
-    color:blue;
-}
-#logoutButton {
-    position: absolute;
-    top: 13%;
-    right: 1rem;
-    transform: translateY(-50%);
-}
+    .pedido-item {
+        background-color: var(--cor-segundaria);
+        padding: 15px;
+        margin: 10px 0;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+    }
 
-#userNome{
-    position: absolute;
-    top: 8%;
-    right: 1rem;
-    transform: translateY(-50%); 
-}
-footer {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-}
+    .pedido-item span {
+        display: block;
+        margin: 5px 0;
+    }
 
-    </style>
+    .btn-aumentar,
+    .btn-diminuir,
+    .excluirButton {
+        background-color: var(--cor-destaque);
+        border: none;
+        padding: 6px;
+        cursor: pointer;
+        color: white;
+        margin-top: 10px;
+        font-size: 1.2rem;
+    }
+
+    .btn-finalizar {
+        background-color: var(--cor-destaque);
+        font-size: 1.5rem;
+        border: none;
+        padding: 5px 10px;
+        cursor: pointer;
+        color: white;
+        margin: 10px;
+    }
+
+    .total {
+        background-color: var(--cor-principal);
+        padding: 10px;
+        margin-top: 20px;
+        text-align: center;
+    }
+
+    .pedido-item img {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-right: 15px;
+    }
+
+    .pedido-item .info {
+        flex-grow: 1;
+    }
+
+    .pedido-item button {
+        margin-top: 10px;
+        margin-right: 5px;
+    }
+
+    .pedido-item .actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    .pedido-item .actions button {
+        background-color: var(--cor-destaque);
+        border: none;
+        padding: 6px;
+        cursor: pointer;
+        color: white;
+    }
+
+    button, .btn-aumentar, .btn-diminuir, .excluirButton, .btn-finalizar {
+        position: relative;
+        z-index: 10;
+    }
+
+    .btn-aumentar, .btn-diminuir {
+        margin-right: 10px;
+    }
+    
+
+</style>
 </head>
 <body>
     <header>
@@ -78,8 +159,6 @@ footer {
     <main>
 
 
-
-
     </main>
   
 
@@ -91,9 +170,7 @@ footer {
 
     <script>
         
-      
-
-        function getCookie(name) {
+    function getCookie(name) {
     let cookieArr = document.cookie.split(";");
     for (let i = 0; i < cookieArr.length; i++) {
         let cookie = cookieArr[i].trim();
@@ -104,7 +181,6 @@ footer {
     return null;
 }
     
-   
     document.addEventListener('DOMContentLoaded', function() {
     const userInfo = getCookie('userInfo');
     
@@ -123,14 +199,12 @@ footer {
         window.location.href = 'login.html';
     });
 
-
-    
     function carregarPedidos(userID) {
-    console.log('Função carregarPedidos chamada com userID:', userID); // Verificando se a função é chamada
+
     var xhr = new XMLHttpRequest();
     xhr.open('GET', 'buscarPedidos.php?userID=' + userID, true);
     xhr.onreadystatechange = function() {
-        console.log('Estado da requisição:', xhr.readyState); // Verificando estado da requisição
+        console.log('Estado da requisição:', xhr.readyState); 
         if (xhr.readyState === 4 && xhr.status === 200) {
             try {
                 var data = JSON.parse(this.responseText);
@@ -147,9 +221,9 @@ footer {
 
 function renderizarPedidos(pedidos) {
     const pedidosContainer = document.querySelector('main');
-    pedidosContainer.innerHTML = ''; // Limpa o conteúdo atual
+    pedidosContainer.innerHTML = ''; 
 
-    // Agrupar itens pelo nome, somando as quantidades
+    // agrupa os pedidos para somar a quantidade
     const pedidosAgrupados = {};
     pedidos.forEach(pedido => {
         if (pedidosAgrupados[pedido.nome]) {
@@ -165,6 +239,12 @@ function renderizarPedidos(pedidos) {
         const item = document.createElement('div');
         item.classList.add('pedido-item');
 
+        const itemImage = document.createElement('img');
+        itemImage.src = pedido.foto; 
+        itemImage.alt = pedido.nome;
+
+        const infoDiv = document.createElement('div');
+        infoDiv.classList.add('info');
         const nomeSpan = document.createElement('span');
         nomeSpan.textContent = pedido.nome;
 
@@ -174,6 +254,12 @@ function renderizarPedidos(pedidos) {
         const precoSpan = document.createElement('span');
         precoSpan.textContent = 'Preço: R$ ' + (pedido.preco * pedido.quantidade).toFixed(2);
 
+        infoDiv.appendChild(nomeSpan);
+        infoDiv.appendChild(quantidadeSpan);
+        infoDiv.appendChild(precoSpan);
+
+        const actionsDiv = document.createElement('div');
+        actionsDiv.classList.add('actions');
         const btnAumentar = document.createElement('button');
         btnAumentar.textContent = '+';
         btnAumentar.classList.add('btn-aumentar');
@@ -190,24 +276,25 @@ function renderizarPedidos(pedidos) {
             excluirItem(pedido.id);
         });
 
+        actionsDiv.appendChild(btnAumentar);
+        actionsDiv.appendChild(btnDiminuir);
+        actionsDiv.appendChild(excluirButton);
+
         total += pedido.preco * pedido.quantidade;
 
-        item.appendChild(nomeSpan);
-        item.appendChild(quantidadeSpan);
-        item.appendChild(precoSpan);
-        item.appendChild(btnAumentar);
-        item.appendChild(btnDiminuir);
-        item.appendChild(excluirButton);
+        
+        item.appendChild(itemImage);
+        item.appendChild(infoDiv);
+        item.appendChild(actionsDiv);
 
         pedidosContainer.appendChild(item);
     }
 
-    // Exibir o total
+    // Total de preço
     const totalDiv = document.createElement('div');
     totalDiv.classList.add('total');
     totalDiv.innerHTML = `<h2>Total: R$ ${total.toFixed(2)}</h2>`;
 
-    // Adicionar o botão de finalizar pedido
     const finalizarButton = document.createElement('button');
     finalizarButton.textContent = 'Finalizar Pedido';
     finalizarButton.classList.add('btn-finalizar');
@@ -265,7 +352,7 @@ function excluirItem(itemID) {
 }
 
 function finalizarPedido() {
-    // Mostrar uma mensagem de confirmação antes de prosseguir
+    
     const confirmacao = confirm('Tem certeza de que deseja finalizar o pedido?');
     
     if (confirmacao) {
@@ -280,7 +367,7 @@ function finalizarPedido() {
                     var response = JSON.parse(this.responseText);
                     if (response.success) {
                         alert('Pedido finalizado com sucesso!');
-                        carregarPedidos(userID); // Recarregar pedidos
+                        carregarPedidos(userID); 
                     } else {
                         alert('Erro ao finalizar o pedido');
                     }
@@ -291,11 +378,9 @@ function finalizarPedido() {
         };
         xhr.send('userID=' + userID);
     } else {
-        // Caso o usuário cancele a confirmação
         alert('A finalização do pedido foi cancelada.');
     }
 }
-
 
     </script>
 </body>

@@ -192,22 +192,22 @@
         <p id="error" style="color: red; display: flex; justify-content: center;"></p>
     </div>
 
-    <script>
-        document.getElementById('senhaCon').addEventListener('input', function () {
-        const senha = document.getElementById('senha').value;
-        const senhaCon = this.value;
-        const feedback = document.getElementById('senhaConFeedback');
-        const btnCadastro = document.getElementById('btnCadastro');
-
-        if (senha !== senhaCon) {
-            this.style.borderColor = 'red'; 
-            feedback.style.display = 'block'; 
-        } else {
-            this.style.borderColor = ''; 
-            feedback.style.display = 'none'; 
-            btnCadastro.disabled = false;
-        }
-    });
+<script>
+    document.getElementById('senhaCon').addEventListener('input', function () {
+    const senha = document.getElementById('senha').value;
+    const senhaCon = this.value;
+    const feedback = document.getElementById('senhaConFeedback');
+    const btnCadastro = document.getElementById('btnCadastro');
+    
+    if (senha !== senhaCon) {
+        this.style.borderColor = 'red'; 
+        feedback.style.display = 'block'; 
+    } else {
+        this.style.borderColor = ''; 
+        feedback.style.display = 'none'; 
+        btnCadastro.disabled = false;
+    }
+});
 
         function getUrlParameter(name) {
             const urlParams = new URLSearchParams(window.location.search);

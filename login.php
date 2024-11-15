@@ -1,19 +1,11 @@
 <?php
 include "conexao.php"; 
 
-
-
 $email = $_POST["email"];
 $senha = $_POST["senha"];
 
-
 $sql = "SELECT id, nome, senha FROM tb_usuario WHERE email = ?";
 $stmt = $conn->prepare($sql);
-
-if (!$stmt) {
-    echo "Erro ao preparar a consulta: " . $conn->error;
-    exit;
-}
 
 
 $stmt->bind_param("s", $email);
@@ -30,7 +22,6 @@ if ($stmt->num_rows > 0) {
         $_SESSION["user_id"] = $id;
         $_SESSION["nome"] = $nome;
 
-        //setcookie('username', $nome, time() + 3600, '/');
         setcookie('userInfo', json_encode(['nome' => $nome, 'id' => $id]), time() + 3600, '/');
 
         header("Location: cardapio.html");

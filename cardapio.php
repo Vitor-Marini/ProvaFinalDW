@@ -1,8 +1,6 @@
 <?php
 
 include "conexao.php"; 
-header('Content-Type: application/json');
-
 
 $categorias = $conn->query("SELECT * FROM tb_categoria");
 $resultado = [];
@@ -16,7 +14,7 @@ while ($categoria = $categorias->fetch_assoc()) {
         $itensArray[] = [
             'nome' => $item['nome'],
             'descricao' => $item['descricao'],
-            'foto' => $item['foto'], // Deve ser a URL da imagem se estiver em um diretório
+            'foto' => $item['foto'], 
             'preco' => $item['preco'],
             'id' => $item['id']
         ];

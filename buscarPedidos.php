@@ -2,26 +2,29 @@
 include 'conexao.php'; 
 header('Content-Type: application/json');
 
-// Obtém o ID do usuário via cookie
-$userID = $_GET['userID']; // Receber o userID via GET
+$userID = $_GET['userID'];
 
-// Consulta para buscar os itens de pedidos não finalizados
-$sql = "SELECT p.id, i.nome, p.quantidade, p.preco 
+
+$sql = "SELECT p.id, i.nome, p.quantidade, p.preco, i.foto 
         FROM tb_itens_pedido p
         JOIN tb_itens i ON p.idItem = i.id
         WHERE p.idUsuario = ? AND p.finalizado = FALSE";
 
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $userID);  // Previne SQL Injection
+$stmt->bind_param("i", $userID);  
 $stmt->execute();
 $result = $stmt->get_result();
 
 $pedidos = [];
 while ($row = $result->fetch_assoc()) {
+    if (empty($row['foto'])) {
+        $row['foto'] = 'imgItens/defaultImg.png';  
+    }
+    
     $pedidos[] = $row;
 }
 
-echo json_encode($pedidos); // Retorna os dados em formato JSON
+echo json_encode($pedidos);  
 
 $stmt->close();
 $conn->close();
